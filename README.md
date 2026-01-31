@@ -37,7 +37,7 @@ This project consists of 5 microservices + Web UI:
 │  Product  │  │   User   │  │   Order    │
 │  Service  │  │ Service  │  │  Service   │
 │ Port:8081 │  │Port:8082 │  │ Port:8083  │
-│  [H2 DB]  │  │ [H2 DB]  │  │  [H2 DB]   │
+│ [RedisDB] │  │ [H2 DB]  │  │  [H2 DB]   │
 └───────────┘  └──────────┘  └─────┬──────┘
                                     │
                   ┌─────────────────┴────────────┐
@@ -62,6 +62,7 @@ This project consists of 5 microservices + Web UI:
 - **OpenFeign** - Inter-service Communication
 - **Spring Data JPA** - Database Access
 - **H2 Database** - In-memory Database
+- **Redis Database** - Used as high performance Database
 - **Lombok** - Reduce Boilerplate Code
 - **Maven** - Build Tool
 - **HTML/CSS/JavaScript** - Web UI
@@ -71,8 +72,16 @@ This project consists of 5 microservices + Web UI:
 
 - Java 17 or higher
 - Maven 3.6+
+- Docker (for Redis)
 
 ## Setup Instructions
+
+### Setup REDIS for Product service
+```
+docker run --name redis-local -p 6379:6379 -d redis:7-alpine
+docker exec -it redis-local redis-cli
+
+```
 
 ### Build All Services
 
@@ -96,6 +105,8 @@ cd ..
 cd order-service
 mvn clean install
 cd ..
+
+
 ```
 
 ### Run the Services

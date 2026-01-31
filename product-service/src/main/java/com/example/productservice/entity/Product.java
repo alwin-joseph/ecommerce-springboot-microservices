@@ -1,33 +1,34 @@
 package com.example.productservice.entity;
 
-import jakarta.persistence.*;
+// import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
+
+@RedisHash("product")  // ← Redis annotation instead of @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Product implements java.io.Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     
-    @Column(nullable = false)
+    @Indexed  // ← Create secondary index for queries
     private String name;
     
     private String description;
     
-    @Column(nullable = false)
     private BigDecimal price;
     
-    @Column(nullable = false)
     private Integer stockQuantity;
     
+    @Indexed 
     private String category;
 }

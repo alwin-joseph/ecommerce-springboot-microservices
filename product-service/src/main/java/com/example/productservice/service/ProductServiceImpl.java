@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,6 +24,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
         Product product = new Product();
+        product.setId(UUID.randomUUID().toString());
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
@@ -36,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
     }
     
     @Override
-    public ProductResponse getProductById(Long id) {
+    public ProductResponse getProductById(String id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         return mapToResponse(product);
@@ -44,14 +46,14 @@ public class ProductServiceImpl implements ProductService {
     
     @Override
     public List<ProductResponse> getAllProducts() {
-        return productRepository.findAll().stream()
+        return ((List<Product>) productRepository.findAll()).stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
     
     @Override
     @Transactional
-    public ProductResponse updateProduct(Long id, ProductRequest request) {
+    public ProductResponse updateProduct(String id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
         
@@ -69,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
     
     @Override
     @Transactional
-    public void deleteProduct(Long id) {
+    public void deleteProduct(String id) {
         if (!productRepository.existsById(id)) {
             throw new RuntimeException("Product not found with id: " + id);
         }
@@ -78,7 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
     
     @Override
-    public boolean checkAvailability(Long productId, Integer quantity) {
+    public boolean checkAvailability(String productId, Integer quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
         return product.getStockQuantity() >= quantity;
@@ -86,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
     
     @Override
     @Transactional
-    public void reduceStock(Long productId, Integer quantity) {
+    public void reduceStock(String productId, Integer quantity) {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + productId));
         

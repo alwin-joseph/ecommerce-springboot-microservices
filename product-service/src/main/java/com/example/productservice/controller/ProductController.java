@@ -24,7 +24,7 @@ public class ProductController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable String id) {
         return ResponseEntity.ok(productService.getProductById(id));
     }
     
@@ -35,27 +35,27 @@ public class ProductController {
     
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable Long id,
+            @PathVariable String id,
             @Valid @RequestBody ProductRequest request) {
         return ResponseEntity.ok(productService.updateProduct(id, request));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
     
     @GetMapping("/{id}/availability")
     public ResponseEntity<Boolean> checkAvailability(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam Integer quantity) {
         return ResponseEntity.ok(productService.checkAvailability(id, quantity));
     }
     
     @PostMapping("/{id}/reduce-stock")
     public ResponseEntity<Void> reduceStock(
-            @PathVariable Long id,
+            @PathVariable String id,
             @RequestParam Integer quantity) {
         productService.reduceStock(id, quantity);
         return ResponseEntity.ok().build();

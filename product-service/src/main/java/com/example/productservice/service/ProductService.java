@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface ProductService {
     ProductResponse createProduct(ProductRequest request);
-    ProductResponse getProductById(Long id);
+    ProductResponse getProductById(String id);
     List<ProductResponse> getAllProducts();
-    ProductResponse updateProduct(Long id, ProductRequest request);
-    void deleteProduct(Long id);
-    boolean checkAvailability(Long productId, Integer quantity);
-    void reduceStock(Long productId, Integer quantity);
+    ProductResponse updateProduct(String id, ProductRequest request);
+    void deleteProduct(String id);
+    boolean checkAvailability(String productId, Integer quantity);
+    void reduceStock(String productId, Integer quantity);
 }
