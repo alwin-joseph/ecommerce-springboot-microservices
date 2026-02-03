@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,12 +20,15 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl implements ProductService {
     
     private final ProductRepository productRepository;
+
+    private static final AtomicLong idCounter = new AtomicLong(1);
     
     @Override
     @Transactional
     public ProductResponse createProduct(ProductRequest request) {
         Product product = new Product();
-        product.setId(UUID.randomUUID().toString());
+        product.setId(String.valueOf(idCounter.getAndIncrement()));
+        
         product.setName(request.getName());
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());

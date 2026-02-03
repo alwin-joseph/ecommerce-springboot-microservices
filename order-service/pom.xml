@@ -60,6 +60,14 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
+        <!-- AWS Lambda SDK for invoking Lambda functions -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>lambda</artifactId>
+            <version>2.20.0</version>
+        </dependency>
+
     </dependencies>
     
     <dependencyManagement>

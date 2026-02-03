@@ -15,7 +15,7 @@ public class OrderResponse {
     private Long id;
     private Long userId;
     private String userName;
-    private Long productId;
+    private String productId;
     private String productName;
     private Integer quantity;
     private BigDecimal totalPrice;

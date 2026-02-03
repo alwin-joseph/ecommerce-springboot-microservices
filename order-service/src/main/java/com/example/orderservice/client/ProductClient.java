@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ProductClient {
     
     @GetMapping("/api/products/{id}")
-    ProductResponse getProductById(@PathVariable("id") Long id);
+    ProductResponse getProductById(@PathVariable("id") String id);
     
     @GetMapping("/api/products/{id}/availability")
-    Boolean checkAvailability(@PathVariable("id") Long id, @RequestParam("quantity") Integer quantity);
+    Boolean checkAvailability(@PathVariable("id") String id, @RequestParam("quantity") Integer quantity);
     
     @PostMapping("/api/products/{id}/reduce-stock")
-    void reduceStock(@PathVariable("id") Long id, @RequestParam("quantity") Integer quantity);
+    void reduceStock(@PathVariable("id") String id, @RequestParam("quantity") Integer quantity);
 }

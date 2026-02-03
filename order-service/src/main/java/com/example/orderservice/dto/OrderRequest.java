@@ -11,7 +11,7 @@ public class OrderRequest {
     private Long userId;
     
     @NotNull(message = "Product ID is required")
-    private Long productId;
+    private String productId;
     
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be positive")

@@ -2,6 +2,7 @@ package com.example.orderservice.service;
 
 import com.example.orderservice.client.ProductClient;
 import com.example.orderservice.client.UserClient;
+import com.example.orderservice.dto.OrderEmailEvent;
 import com.example.orderservice.dto.OrderRequest;
 import com.example.orderservice.dto.OrderResponse;
 import com.example.orderservice.dto.ProductResponse;
@@ -26,6 +27,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductClient productClient;  // Feign Client
     private final UserClient userClient;        // Feign Client
+    private final EmailService emailService;    // AWS Lambda Email Service
     
     @Override
     @Transactional
@@ -82,6 +84,10 @@ public class OrderServiceImpl implements OrderService {
             // Update order status to CONFIRMED
             savedOrder.setStatus(Order.OrderStatus.CONFIRMED);
             orderRepository.save(savedOrder);
+            
+            // Step 7: Send order confirmation email asynchronously via AWS Lambda
+            sendOrderConfirmationEmail(savedOrder, user, product);
+            
         } catch (Exception e) {
             log.error("Failed to reduce stock, cancelling order", e);
             savedOrder.setStatus(Order.OrderStatus.CANCELLED);
@@ -90,6 +96,46 @@ public class OrderServiceImpl implements OrderService {
         }
         
         return mapToResponse(savedOrder, user, product);
+    }
+    
+    /**
+     * Send order confirmation email via AWS Lambda
+     * 
+     * This method prepares the email event and invokes Lambda asynchronously.
+     * The email is sent in the background and doesn't block the order creation flow.
+     * 
+     * @param order Saved order entity
+     * @param user User details
+     * @param product Product details
+     */
+    private void sendOrderConfirmationEmail(Order order, UserResponse user, ProductResponse product) {
+        try {
+            // Build email event with all necessary data
+            OrderEmailEvent emailEvent = OrderEmailEvent.builder()
+                    .orderId(order.getId().toString())
+                    .customerEmail(user.getEmail())
+                    .customerName(user.getName())
+                    .productName(product.getName())
+                    .productDescription(product.getDescription())
+                    .quantity(order.getQuantity())
+                    .unitPrice(product.getPrice())
+                    .totalPrice(order.getTotalPrice())
+                    .orderStatus(order.getStatus().name())
+                    .orderDate(order.getOrderDate())
+                    .productId(product.getId().toString())
+                    .userId(user.getId().toString())
+                    .build();
+            
+            // Send email asynchronously (doesn't block)
+            emailService.sendOrderConfirmationEmail(emailEvent);
+            
+            log.info("Order confirmation email triggered for order: {}", order.getId());
+            
+        } catch (Exception e) {
+            // Log error but don't fail the order
+            // Email failure should not prevent order creation
+            log.error("Failed to trigger order confirmation email for order: {}", order.getId(), e);
+        }
     }
     
     @Override

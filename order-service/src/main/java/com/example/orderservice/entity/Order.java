@@ -23,7 +23,7 @@ public class Order {
     private Long userId;
     
     @Column(nullable = false)
-    private Long productId;
+    private String productId;
     
     @Column(nullable = false)
     private Integer quantity;

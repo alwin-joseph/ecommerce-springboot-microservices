@@ -41,3 +41,12 @@ feign:
         connectTimeout: 5000
         readTimeout: 5000
         loggerLevel: basic
+
+# AWS Lambda configuration
+aws:
+  region: ap-south-1
+  lambda:
+    email-function-name: send-order-email  # Name of the Lambda function in AWS
+    # Note: AWS credentials will be read from:
+    # 1. Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+    # 2. ~/.aws/credentials file

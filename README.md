@@ -83,6 +83,17 @@ docker exec -it redis-local redis-cli
 
 ```
 
+### Setup AWS user account for Order service to send email
+
+Set the below environment values to be used by Order Service.
+```
+export AWS_ACCESS_KEY_ID=<>
+export AWS_SECRET_ACCESS_KEY=<>
+export AWS_REGION=ap-south-1
+
+```
+
+
 ### Build All Services
 
 ```bash
